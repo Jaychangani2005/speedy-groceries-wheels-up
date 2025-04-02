@@ -1,9 +1,10 @@
 
 import React, { useState } from 'react';
-import { Bell, User, Home, History, ChevronLeft, Menu, X } from 'lucide-react';
+import { Bell, User, Home, History, ChevronLeft, Menu, X, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useDelivery } from '@/contexts/DeliveryContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
@@ -16,7 +17,8 @@ interface DeliveryLayoutProps {
 }
 
 const DeliveryLayout: React.FC<DeliveryLayoutProps> = ({ children }) => {
-  const { partner, unreadNotificationsCount } = useDelivery();
+  const { unreadNotificationsCount } = useDelivery();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const isMobile = useIsMobile();
@@ -50,6 +52,10 @@ const DeliveryLayout: React.FC<DeliveryLayoutProps> = ({ children }) => {
     }
   ];
 
+  const handleLogout = () => {
+    logout();
+  };
+
   return (
     <div className="min-h-screen flex bg-gray-50">
       {/* Mobile Header */}
@@ -58,7 +64,7 @@ const DeliveryLayout: React.FC<DeliveryLayoutProps> = ({ children }) => {
           <Button variant="ghost" size="icon" onClick={toggleSidebar}>
             <Menu className="h-5 w-5" />
           </Button>
-          <div className="ml-4 font-semibold">Speedy Groceries</div>
+          <div className="ml-4 font-semibold">तेज़ डिलीवरी</div>
           <div className="ml-auto flex items-center gap-2">
             <Button 
               variant="ghost" 
@@ -72,8 +78,8 @@ const DeliveryLayout: React.FC<DeliveryLayoutProps> = ({ children }) => {
               )}
             </Button>
             <Avatar className="h-8 w-8">
-              <AvatarImage src={partner.avatar} />
-              <AvatarFallback>{partner.name.substring(0, 2)}</AvatarFallback>
+              <AvatarImage src={user?.avatar} />
+              <AvatarFallback>{user?.name?.substring(0, 2) || 'UK'}</AvatarFallback>
             </Avatar>
           </div>
         </div>
@@ -102,19 +108,19 @@ const DeliveryLayout: React.FC<DeliveryLayoutProps> = ({ children }) => {
         {!isMobile && (
           <div className="p-6 flex items-center gap-2">
             <ChevronLeft className="h-5 w-5 text-delivery-primary" />
-            <h1 className="text-xl font-bold">Speedy Groceries</h1>
+            <h1 className="text-xl font-bold">तेज़ डिलीवरी</h1>
           </div>
         )}
         
         <div className="px-6 py-4">
           <div className="flex items-center gap-3">
             <Avatar>
-              <AvatarImage src={partner.avatar} />
-              <AvatarFallback>{partner.name.substring(0, 2)}</AvatarFallback>
+              <AvatarImage src={user?.avatar} />
+              <AvatarFallback>{user?.name?.substring(0, 2) || 'UK'}</AvatarFallback>
             </Avatar>
             <div>
-              <p className="font-medium">{partner.name}</p>
-              <p className="text-xs text-muted-foreground">Delivery Partner</p>
+              <p className="font-medium">{user?.name || 'Delivery Partner'}</p>
+              <p className="text-xs text-muted-foreground">{user?.mobile || ''}</p>
             </div>
           </div>
           
@@ -154,6 +160,17 @@ const DeliveryLayout: React.FC<DeliveryLayoutProps> = ({ children }) => {
             ))}
           </ul>
         </nav>
+        
+        <div className="absolute bottom-24 left-0 right-0 px-6">
+          <Button 
+            variant="outline" 
+            className="w-full flex items-center justify-center text-red-500"
+            onClick={handleLogout}
+          >
+            <LogOut className="h-4 w-4 mr-2" />
+            Logout
+          </Button>
+        </div>
         
         <div className="absolute bottom-8 left-0 right-0 px-6">
           <div className="rounded-lg bg-accent p-4">
