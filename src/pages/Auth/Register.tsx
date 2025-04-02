@@ -10,6 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import Logo from '@/components/common/Logo';
+import { useAuth } from '@/contexts/AuthContext';
 
 const formSchema = z.object({
   fullName: z.string().min(2, {
@@ -54,6 +55,7 @@ const Register: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const { register, login } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -76,16 +78,19 @@ const Register: React.FC = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     try {
-      // Mock registration functionality for now
-      console.log("Registration values:", values);
+      // First register the user
+      await register(values);
       
       toast({
         title: "Registration successful",
-        description: "Your account is being verified. We'll notify you when it's ready.",
+        description: "Your account has been created successfully!",
       });
       
-      // Redirect to login
-      navigate('/login');
+      // Then login the user automatically
+      await login(values.mobile, values.password);
+      
+      // Redirect to dashboard after successful registration and login
+      navigate('/delivery');
     } catch (error) {
       console.error("Registration error:", error);
       toast({

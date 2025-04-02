@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { z } from "zod";
@@ -10,6 +9,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import Logo from '@/components/common/Logo';
+import { useAuth } from '@/contexts/AuthContext';
 
 const formSchema = z.object({
   mobile: z.string().min(10, {
@@ -25,6 +25,7 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const { login } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -38,11 +39,7 @@ const Login: React.FC = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     try {
-      // Mock login functionality for now
-      console.log("Login values:", values);
-      
-      // Mock successful login
-      localStorage.setItem('isLoggedIn', 'true');
+      await login(values.mobile, values.password);
       
       toast({
         title: "Login successful",

@@ -71,8 +71,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // For demo purposes, registration always succeeds
     console.log('User registered:', userData);
     
-    // In a real app, you might want to log the user in immediately or redirect to login
-    navigate('/login');
+    // We're removing the automatic redirect to login since we'll handle that in the Register component
   };
 
   return (
