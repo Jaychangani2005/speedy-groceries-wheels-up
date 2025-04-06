@@ -19,7 +19,7 @@ const DeliverySummaryCard: React.FC = () => {
               <TrendingUp className="h-4 w-4 mr-2 text-delivery-primary" />
               <span className="text-sm font-medium">Today's Earnings</span>
             </div>
-            <p className="text-2xl font-bold text-delivery-primary">${summary.todayEarnings.toFixed(2)}</p>
+            <p className="text-2xl font-bold text-delivery-primary">₹{summary.todayEarnings.toFixed(2)}</p>
           </div>
           
           <div className="space-y-2">
@@ -27,7 +27,7 @@ const DeliverySummaryCard: React.FC = () => {
               <TrendingUp className="h-4 w-4 mr-2 text-delivery-primary" />
               <span className="text-sm font-medium">Weekly Earnings</span>
             </div>
-            <p className="text-2xl font-bold">${summary.weeklyEarnings.toFixed(2)}</p>
+            <p className="text-2xl font-bold">₹{summary.weeklyEarnings.toFixed(2)}</p>
           </div>
           
           <div className="space-y-1">
