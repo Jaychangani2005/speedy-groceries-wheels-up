@@ -1,20 +1,20 @@
-import React, { useState } from 'react';
+
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { Truck, ChevronRight } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-import AuthModal from '@/components/auth/AuthModal';
 
 const Index = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   
   const handlePartnerAccess = () => {
+    // Redirect to login if not authenticated, otherwise to dashboard
     if (isAuthenticated) {
       navigate('/delivery');
     } else {
-      setIsAuthModalOpen(true);
+      navigate('/login');
     }
   };
 
@@ -88,11 +88,6 @@ const Index = () => {
           <p>&copy; 2023 Speedy Groceries. All rights reserved.</p>
         </div>
       </footer>
-
-      <AuthModal 
-        isOpen={isAuthModalOpen} 
-        onClose={() => setIsAuthModalOpen(false)} 
-      />
     </div>
   );
 };

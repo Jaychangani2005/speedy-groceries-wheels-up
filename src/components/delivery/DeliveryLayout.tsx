@@ -64,7 +64,7 @@ const DeliveryLayout: React.FC<DeliveryLayoutProps> = ({ children }) => {
           <Button variant="ghost" size="icon" onClick={toggleSidebar}>
             <Menu className="h-5 w-5" />
           </Button>
-          <div className="ml-4 font-semibold">SpeedyDelivery</div>
+          <div className="ml-4 font-semibold">तेज़ डिलीवरी</div>
           <div className="ml-auto flex items-center gap-2">
             <Button 
               variant="ghost" 
@@ -108,7 +108,7 @@ const DeliveryLayout: React.FC<DeliveryLayoutProps> = ({ children }) => {
         {!isMobile && (
           <div className="p-6 flex items-center gap-2">
             <ChevronLeft className="h-5 w-5 text-delivery-primary" />
-            <h1 className="text-xl font-bold">SpeedyDelivery</h1>
+            <h1 className="text-xl font-bold">तेज़ डिलीवरी</h1>
           </div>
         )}
         
