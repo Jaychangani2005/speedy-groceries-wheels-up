@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { DeliveryTask } from '@/types/delivery';
 import DeliveryStatusBadge from './DeliveryStatusBadge';
-import { ArrowLeft, Clock, MapPin, Phone, Truck, CheckCircle, AlertCircle, Package, Store, DollarSign } from 'lucide-react';
+import { ArrowLeft, Clock, MapPin, Phone, Truck, CheckCircle, AlertCircle, Package, Store } from 'lucide-react';
 import { useDelivery } from '@/contexts/DeliveryContext';
 import { Separator } from '@/components/ui/separator';
 import { format } from 'date-fns';
@@ -150,7 +150,13 @@ const DeliveryDetail: React.FC<DeliveryDetailProps> = ({ task, onBack }) => {
           <div className="flex items-center justify-between">
             <span className="font-medium">Earnings</span>
             <div className="flex items-center text-delivery-primary font-medium">
-              <DollarSign className="h-4 w-4 mr-1" />
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 mr-1">
+                <path d="M18 7c0-1.1-.9-2-2-2H8a2 2 0 0 0-2 2v7h12V7z"></path>
+                <path d="M6 14v3a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-3"></path>
+                <path d="M12 14v4"></path>
+                <path d="M9 14l-1 4"></path>
+                <path d="M15 14l1 4"></path>
+              </svg>
               <span>{task.earnings.toFixed(2)}</span>
             </div>
           </div>

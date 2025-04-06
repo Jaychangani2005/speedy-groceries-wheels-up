@@ -22,15 +22,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
     setIsAuthenticated(loggedIn);
     
-    // Mock user data if logged in
+    // Load user data from localStorage if logged in
     if (loggedIn) {
-      setUser({
-        id: '1',
-        name: 'Rahul Kumar',
-        mobile: '9876543210',
-        email: 'rahul.k@example.com',
-        avatar: '/img/avatar-1.png'
-      });
+      const savedUser = localStorage.getItem('userData');
+      if (savedUser) {
+        setUser(JSON.parse(savedUser));
+      } else {
+        // Fallback mock user
+        const defaultUser = {
+          id: '1',
+          name: 'Rahul Kumar',
+          mobile: '9876543210',
+          email: 'rahul.k@example.com',
+          avatar: '/img/avatar-1.png'
+        };
+        setUser(defaultUser);
+        localStorage.setItem('userData', JSON.stringify(defaultUser));
+      }
     }
   }, []);
 
@@ -42,22 +50,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     // For demo purposes, any credentials will work
-    setIsAuthenticated(true);
-    setUser({
+    const userData = {
       id: '1',
       name: 'Rahul Kumar',
       mobile,
       email: 'rahul.k@example.com',
       avatar: '/img/avatar-1.png'
-    });
+    };
     
+    setIsAuthenticated(true);
+    setUser(userData);
+    
+    // Store authentication state and user data in localStorage
     localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('userData', JSON.stringify(userData));
   };
 
   const logout = () => {
     setIsAuthenticated(false);
     setUser(null);
     localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('userData');
     navigate('/login');
   };
 
