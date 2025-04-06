@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { DeliveryTask } from '@/types/delivery';
 import DeliveryStatusBadge from './DeliveryStatusBadge';
-import { ArrowLeft, Clock, MapPin, Phone, Truck, CheckCircle, AlertCircle, Package, Store, XCircle } from 'lucide-react';
+import { ArrowLeft, Clock, MapPin, Phone, Truck, CheckCircle, AlertCircle, Package, Store } from 'lucide-react';
 import { useDelivery } from '@/contexts/DeliveryContext';
 import { Separator } from '@/components/ui/separator';
 import { format } from 'date-fns';
@@ -30,23 +30,13 @@ const DeliveryDetail: React.FC<DeliveryDetailProps> = ({ task, onBack }) => {
     switch(task.status) {
       case 'assigned':
         return (
-          <div className="grid grid-cols-2 gap-3">
-            <Button 
-              className="w-full" 
-              onClick={() => handleStatusUpdate('picked-up')}
-            >
-              <Package className="mr-2 h-4 w-4" />
-              Confirm Pickup
-            </Button>
-            <Button 
-              variant="outline" 
-              className="w-full text-red-500" 
-              onClick={() => handleStatusUpdate('denied')}
-            >
-              <XCircle className="mr-2 h-4 w-4" />
-              Deny Order
-            </Button>
-          </div>
+          <Button 
+            className="w-full" 
+            onClick={() => handleStatusUpdate('picked-up')}
+          >
+            <Package className="mr-2 h-4 w-4" />
+            Confirm Pickup
+          </Button>
         );
       case 'picked-up':
         return (
@@ -80,7 +70,6 @@ const DeliveryDetail: React.FC<DeliveryDetailProps> = ({ task, onBack }) => {
         );
       case 'delivered':
       case 'issue':
-      case 'denied':
         return null;
       default:
         return null;
