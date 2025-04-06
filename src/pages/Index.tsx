@@ -3,9 +3,20 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { Truck, ChevronRight } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Index = () => {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+  
+  const handlePartnerAccess = () => {
+    // Redirect to login if not authenticated, otherwise to dashboard
+    if (isAuthenticated) {
+      navigate('/delivery');
+    } else {
+      navigate('/login');
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-white to-green-50">
@@ -14,7 +25,9 @@ const Index = () => {
           <Truck className="h-6 w-6 text-delivery-primary mr-2" />
           <h1 className="text-xl font-bold">Speedy Groceries</h1>
         </div>
-        <Button variant="outline" onClick={() => navigate('/delivery')}>Partner Login</Button>
+        <Button variant="outline" onClick={handlePartnerAccess}>
+          {isAuthenticated ? 'Partner Dashboard' : 'Partner Login'}
+        </Button>
       </header>
 
       <main className="flex-1 container mx-auto px-4 py-12 flex flex-col md:flex-row items-center justify-between">
@@ -28,9 +41,9 @@ const Index = () => {
           <Button 
             size="lg" 
             className="bg-delivery-primary hover:bg-delivery-secondary"
-            onClick={() => navigate('/delivery')}
+            onClick={handlePartnerAccess}
           >
-            Access Partner Dashboard
+            {isAuthenticated ? 'Access Partner Dashboard' : 'Access Partner Login'}
             <ChevronRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
