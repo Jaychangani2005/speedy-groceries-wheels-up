@@ -7,7 +7,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { 
+  Form, 
+  FormControl, 
+  FormField, 
+  FormItem, 
+  FormLabel, 
+  FormMessage 
+} from "@/components/ui/form";
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import Logo from '@/components/common/Logo';
 import { useAuth } from '@/contexts/AuthContext';
@@ -17,7 +31,11 @@ const formSchema = z.object({
     message: "Full name must be at least 2 characters",
   }),
   mobile: z.string().min(10, {
-    message: "Mobile number must be at least 10 digits",
+    message: "Mobile number must be 10 digits",
+  }).max(10, {
+    message: "Mobile number must be 10 digits",
+  }).regex(/^[6-9]\d{9}$/, {
+    message: "Please enter a valid Indian mobile number",
   }),
   email: z.string().email({
     message: "Please enter a valid email address",
@@ -25,11 +43,11 @@ const formSchema = z.object({
   password: z.string().min(6, {
     message: "Password must be at least 6 characters",
   }),
-  aadharNumber: z.string().min(12, {
-    message: "Aadhar number must be 12 digits",
+  dateOfBirth: z.string().min(1, {
+    message: "Date of birth is required",
   }),
-  panCard: z.string().min(10, {
-    message: "PAN card must be 10 characters",
+  gender: z.string().min(1, {
+    message: "Gender is required",
   }),
   address: z.string().min(10, {
     message: "Address must be at least 10 characters",
@@ -43,8 +61,14 @@ const formSchema = z.object({
   pincode: z.string().min(6, {
     message: "Pincode must be 6 digits",
   }),
-  vehicle: z.string().min(1, {
+  vehicleType: z.string().min(1, {
     message: "Vehicle type is required",
+  }),
+  vehicleRegistrationNumber: z.string().min(1, {
+    message: "Vehicle registration number is required",
+  }),
+  drivingLicenseNumber: z.string().min(1, {
+    message: "Driving license number is required",
   }),
   termsAccepted: z.boolean().refine(val => val === true, {
     message: "You must accept the terms and conditions",
@@ -55,7 +79,7 @@ const Register: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
-  const { register, login } = useAuth();
+  const { register: registerUser } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -64,13 +88,15 @@ const Register: React.FC = () => {
       mobile: "",
       email: "",
       password: "",
-      aadharNumber: "",
-      panCard: "",
+      dateOfBirth: "",
+      gender: "",
       address: "",
       city: "",
       state: "",
       pincode: "",
-      vehicle: "",
+      vehicleType: "",
+      vehicleRegistrationNumber: "",
+      drivingLicenseNumber: "",
       termsAccepted: false,
     },
   });
@@ -78,19 +104,15 @@ const Register: React.FC = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     try {
-      // First register the user
-      await register(values);
+      // Register the user
+      await registerUser(values);
       
       toast({
         title: "Registration successful",
         description: "Your account has been created successfully!",
       });
       
-      // Then login the user automatically
-      await login(values.mobile, values.password);
-      
-      // Redirect to dashboard after successful registration and login
-      navigate('/delivery');
+      // The redirect happens in the AuthContext after registration
     } catch (error) {
       console.error("Registration error:", error);
       toast({
@@ -123,6 +145,7 @@ const Register: React.FC = () => {
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                {/* Personal Information */}
                 <FormField
                   control={form.control}
                   name="fullName"
@@ -144,7 +167,7 @@ const Register: React.FC = () => {
                     <FormItem>
                       <FormLabel>Mobile Number</FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter your mobile number" {...field} />
+                        <Input placeholder="Enter your 10-digit mobile number" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -181,12 +204,12 @@ const Register: React.FC = () => {
 
                 <FormField
                   control={form.control}
-                  name="aadharNumber"
+                  name="dateOfBirth"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Aadhar Number</FormLabel>
+                      <FormLabel>Date of Birth</FormLabel>
                       <FormControl>
-                        <Input placeholder="XXXX XXXX XXXX" {...field} />
+                        <Input type="date" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -195,18 +218,31 @@ const Register: React.FC = () => {
 
                 <FormField
                   control={form.control}
-                  name="panCard"
+                  name="gender"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>PAN Card</FormLabel>
-                      <FormControl>
-                        <Input placeholder="XXXXXXXXXX" {...field} />
-                      </FormControl>
+                      <FormLabel>Gender</FormLabel>
+                      <Select 
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select gender" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="male">Male</SelectItem>
+                          <SelectItem value="female">Female</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
+                {/* Address Information */}
                 <div className="sm:col-span-2">
                   <FormField
                     control={form.control}
@@ -265,14 +301,56 @@ const Register: React.FC = () => {
                   )}
                 />
 
+                {/* Vehicle Information */}
                 <FormField
                   control={form.control}
-                  name="vehicle"
+                  name="vehicleType"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Vehicle Type</FormLabel>
+                      <Select 
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select vehicle type" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="bike">Bike</SelectItem>
+                          <SelectItem value="scooter">Scooter</SelectItem>
+                          <SelectItem value="cycle">Cycle</SelectItem>
+                          <SelectItem value="car">Car</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="vehicleRegistrationNumber"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Vehicle Registration Number</FormLabel>
                       <FormControl>
-                        <Input placeholder="Bike, Scooter, Cycle, etc." {...field} />
+                        <Input placeholder="e.g., MH02AB1234" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="drivingLicenseNumber"
+                  render={({ field }) => (
+                    <FormItem className="sm:col-span-2">
+                      <FormLabel>Driving License Number</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g., MH0220210012345" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

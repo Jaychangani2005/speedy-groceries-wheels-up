@@ -20,8 +20,8 @@ const formSchema = z.object({
   }).regex(/^[6-9]\d{9}$/, {
     message: "Please enter a valid Indian mobile number",
   }),
-  password: z.string().min(6, {
-    message: "Password must be at least 6 characters",
+  password: z.string().min(1, {
+    message: "Password is required",
   }),
   rememberMe: z.boolean().default(false),
 });
