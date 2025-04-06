@@ -15,7 +15,8 @@ const DeliveryList: React.FC = () => {
     pending: tasks.filter(task => task.status === 'pending'),
     completed: tasks.filter(task => 
       ['delivered', 'issue'].includes(task.status)
-    )
+    ),
+    denied: tasks.filter(task => task.status === 'denied')
   };
 
   return (
@@ -50,6 +51,19 @@ const DeliveryList: React.FC = () => {
         <div>
           <h3 className="font-medium text-lg mb-3">Recently Completed</h3>
           {groupedTasks.completed.map(task => (
+            <DeliveryCard
+              key={task.id}
+              delivery={task}
+              onClick={() => setActiveTask(task)}
+            />
+          ))}
+        </div>
+      )}
+      
+      {groupedTasks.denied.length > 0 && (
+        <div>
+          <h3 className="font-medium text-lg mb-3">Denied Orders</h3>
+          {groupedTasks.denied.map(task => (
             <DeliveryCard
               key={task.id}
               delivery={task}

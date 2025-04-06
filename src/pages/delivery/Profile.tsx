@@ -2,23 +2,35 @@
 import React from 'react';
 import DeliveryLayout from '@/components/delivery/DeliveryLayout';
 import { useDelivery } from '@/contexts/DeliveryContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { format } from 'date-fns';
-import { AlertCircle, AtSign, Calendar, Edit, Mail, MapPin, Phone, Settings, Shield, User } from 'lucide-react';
+import { AlertCircle, AtSign, Calendar, Edit, LogOut, Mail, MapPin, Phone, Settings, Shield, User } from 'lucide-react';
 
 const Profile: React.FC = () => {
   const { partner, summary } = useDelivery();
+  const { logout } = useAuth();
   
   return (
     <DeliveryLayout>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-2">My Profile</h1>
-        <p className="text-muted-foreground">
-          View and manage your account information
-        </p>
+      <div className="mb-6 flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-bold mb-2">My Profile</h1>
+          <p className="text-muted-foreground">
+            View and manage your account information
+          </p>
+        </div>
+        <Button 
+          variant="outline" 
+          className="flex items-center justify-center text-red-500"
+          onClick={logout}
+        >
+          <LogOut className="h-4 w-4 mr-2" />
+          Logout
+        </Button>
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
