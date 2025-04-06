@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -14,14 +13,10 @@ import { useAuth } from '@/contexts/AuthContext';
 
 const formSchema = z.object({
   mobile: z.string().min(10, {
-    message: "Mobile number must be 10 digits",
-  }).max(10, {
-    message: "Mobile number must be 10 digits",
-  }).regex(/^[6-9]\d{9}$/, {
-    message: "Please enter a valid Indian mobile number",
+    message: "Mobile number must be at least 10 digits",
   }),
-  password: z.string().min(1, {
-    message: "Password is required",
+  password: z.string().min(6, {
+    message: "Password must be at least 6 characters",
   }),
   rememberMe: z.boolean().default(false),
 });
@@ -30,14 +25,7 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
-  const { login, isAuthenticated } = useAuth();
-
-  useEffect(() => {
-    // Redirect to dashboard if already authenticated
-    if (isAuthenticated) {
-      navigate('/delivery');
-    }
-  }, [isAuthenticated, navigate]);
+  const { login } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -100,7 +88,7 @@ const Login: React.FC = () => {
                   <FormItem>
                     <FormLabel>Mobile Number</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter your 10-digit mobile number" {...field} />
+                      <Input placeholder="Enter your mobile number" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
