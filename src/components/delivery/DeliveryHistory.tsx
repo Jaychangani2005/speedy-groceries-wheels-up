@@ -43,7 +43,7 @@ const DeliveryHistory: React.FC = () => {
                     
                     <div className="flex justify-between items-center">
                       <div className="text-sm text-muted-foreground">{delivery.customerName}</div>
-                      <div className="font-medium text-delivery-primary">₹{delivery.earnings.toFixed(2)}</div>
+                      <div className="font-medium text-delivery-primary">${delivery.earnings.toFixed(2)}</div>
                     </div>
                     
                     {selectedDelivery?.id === delivery.id && (
